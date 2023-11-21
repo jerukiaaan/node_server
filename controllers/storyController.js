@@ -4,8 +4,8 @@ const { Act } = require('../models/storyModel');
 const { Task } = require('../models/storyModel');
 
 const createStory = (req, res) => {
-    const { story } = req.body;
-    const newStory = new Story(story);
+    const { title, description, chapters } = req.body;
+    const newStory = new Story({title, description, chapters});
     newStory.save()
         .then((result) => {
             res.status(201).json(result);
@@ -17,10 +17,9 @@ const createStory = (req, res) => {
 
 //Create Chapter
 const createChapter = async (req, res) => {
-    try {    
     const storyID = req.params.storyID;
-    const { chapter } = req.body;
-    const newChapter = new Chapter(chapter);
+    const { title, description, acts } = req.body;
+    const newChapter = new Chapter({title, description, acts});
     
     const story = await Story.findById(storyID);
 
@@ -29,27 +28,24 @@ const createChapter = async (req, res) => {
     }
 
     story.chapters.push(newChapter);
-    await story.save();
-    res.status(201).json({ message: 'Chapter added to Story successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to create chapter' });
-    }
+    await story.save()
+    .then((result) => {
+        res.status(201).json(result.chapters[result.chapters.length - 1]);
+    })
+    .catch((error) => {
+        res.status(500).json({ error: 'Failed to create story' });
+    });
 };
 
 // Create Act
 const createAct = async (req, res) => {
-    try {
         const storyID = req.params.storyID;
         const chapterID = req.params.chapterID;
-        const { act } = req.body;
-        const newAct = new Act(act);
+        const { title, description, dailyTasks, weeklyTasks } = req.body;
+        const newAct = new Act({title, description, dailyTasks, weeklyTasks});
 
         const story = await Story.findById(storyID);
         const chapter = story.chapters.id(chapterID);
-
-        console.log(chapter);
-
-
 
         if (!chapter) {
             console.log('Chapter not found');
@@ -57,24 +53,20 @@ const createAct = async (req, res) => {
         }
 
         chapter.acts.push(newAct);
-        await story.save();
-        
-        console.log('Act added to Chapter successfully');
-        res.status(201).json({ message: 'Act added to Chapter successfully' });
-
-    } catch (error) {
-        console.log('Error:', error);
-        res.status(500).json({ error: error });
-    }
+        await story.save().then((result) => {
+            res.status(201).json(result.chapters[result.chapters.length - 1].acts[result.chapters[result.chapters.length - 1].acts.length - 1]);
+        }).catch((error) => {
+            res.status(500).json({ error: 'Failed to create act' });
+        });
 };
 
 const createTask = async (req, res) => {
-    try {
         const storyID = req.params.storyID;
         const chapterID = req.params.chapterID;
         const actID = req.params.actID;
-        const { task } = req.body;
-        const newTask = new Task(task);
+
+        const { title, description, type, dueDate, goal } = req.body;
+        const newTask = new Task({title, type, description, dueDate, goal});
 
         const story = await Story.findById(storyID);
         const chapter = story.chapters.id(chapterID);
@@ -83,22 +75,53 @@ const createTask = async (req, res) => {
         if (!act) {
             return res.status(404).json({ error: 'Act not found' });
         }
-        console.log(task.type);
-        if (task.type === 'daily') {
+
+        console.log(newTask.type);
+        if (newTask.type == 'daily') {
             act.dailyTasks.push(newTask);
-        } else if (task.type === 'weekly') {
+            await story.save().then((result) => {
+
+                const lastChapter = result.chapters[result.chapters.length - 1];
+                const lastAct = lastChapter.acts[lastChapter.acts.length - 1];
+                const lastDailyTask = lastAct.dailyTasks[lastAct.dailyTasks.length - 1];
+
+                res.status(201).json(lastDailyTask);
+
+            }).catch((error) => {
+                res.status(500).json({ error: 'Failed to create task' });
+            });
+        } else if (newTask.type == 'weekly') {
             act.weeklyTasks.push(newTask);
+            await story.save().then((result) => {
+
+                const lastChapter = result.chapters[result.chapters.length - 1];
+                const lastAct = lastChapter.acts[lastChapter.acts.length - 1];
+                const lastWeeklyTasks = lastAct.weeklyTasks[lastAct.weeklyTasks.length - 1];
+
+                res.status(201).json(lastWeeklyTasks);
+
+            }).catch((error) => {
+                res.status(500).json({ error: 'Failed to create task' });
+            });
         }
-        await story.save();
-        res.status(201).json({ message: 'Task added to Act successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error });
-    }
 };
+
+//get story
+
+const getStory = async (req, res) => {
+    const storyID = req.params.storyID;
+    const story = await Story.findById(storyID);
+    if (!story) {
+        return res.status(404).json({ error: 'Story not found' });
+    }
+    res.status(200).json(story);
+};
+
 
 module.exports = {
     createStory,
     createChapter,
     createAct,
-    createTask
+    createTask,
+    getStory
 };

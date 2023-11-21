@@ -64,22 +64,15 @@ const updateStudentById = (req, res) => {
 const addBadgeIdToObtainedBadges = async (req, res) => {
   try {
     const studentId = req.params.id;
-    const badgeId = req.body['badgeId'];
-    
-    console.log('studentId:', studentId);
-    console.log('badgeId:', badgeId);
+    const { badgeId } = req.body;
 
     const student = await Student.findById(studentId);
-    console.log('student:', student);
 
     if (!student) {
-      console.log('Student not found');
       return res.status(404).json({ error: 'Student not found' });
     }
 
     student.obtainedBadges.push(badgeId);
-
-    console.log('student:', student);
 
     await student.save();
 

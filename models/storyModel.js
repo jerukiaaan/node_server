@@ -7,12 +7,13 @@ const taskSchema = new mongoose.Schema({
   description: { type: String, required: true },
   type: { type: String },
   dueDate: { type: String, required: true },
-  completed: { type: Boolean, default: false }
+  goal: { type: Number, required: true },
 });
 
 const actSchema = new mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true },
+  description: { type: String, required: true },
   dailyTasks: [taskSchema],
   weeklyTasks: [taskSchema]
 });
@@ -20,11 +21,13 @@ const actSchema = new mongoose.Schema({
 const chapterSchema = new mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true },
+  description: { type: String, required: true },
   acts: [actSchema]
 });
 
 const storySchema = new mongoose.Schema({
   title: { type: String, required: true },
+  description: { type: String, required: true },
   chapters: [chapterSchema]
 });
 

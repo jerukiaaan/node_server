@@ -3,10 +3,13 @@ const storyController = require('../controllers/storyController');
 
 const router = express.Router();
 
-// Create a new badge
+// Create
 router.post('/', storyController.createStory);
 router.post('/:storyID', storyController.createChapter);
 router.post('/:storyID/:chapterID', storyController.createAct);
 router.post('/:storyID/:chapterID/:actID', storyController.createTask);
+
+// Get
+router.get('/:storyID', storyController.getStory);
 
 module.exports = router;
