@@ -4,7 +4,10 @@ const studentSchema = new mongoose.Schema({
     fullName: String,
     email: String,
     password: String,
-    obtainedBadges: Array
+    obtainedBadges: Array,
+    obtainedTasks: Array,
+    obtainedActs: Array,
+    obtainedChapters: Array
   });
   
   // Define a model based on the schema

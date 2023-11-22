@@ -61,10 +61,10 @@ const updateStudentById = (req, res) => {
       });
 }
 
-const addBadgeIdToObtainedBadges = async (req, res) => {
+const addIdToObtainedList = async (req, res) => {
   try {
     const studentId = req.params.id;
-    const { badgeId } = req.body;
+    const { taskId, badgeId, chapterId, actId } = req.body;
 
     const student = await Student.findById(studentId);
 
@@ -72,16 +72,24 @@ const addBadgeIdToObtainedBadges = async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    student.obtainedBadges.push(badgeId);
+    if (taskId) {
+      student.obtainedTasks.push(taskId);
+    } else if (badgeId) {
+      student.obtainedBadges.push(badgeId);
+    } else if (actId) {
+      student.obtainedActs.push(actId);
+    } else {
+      student.obtainedChapters.push(chapterId);
+    }
 
     await student.save();
 
-    console.log('Badge added to obtainedBadges successfully');
-    return res.status(200).json({ message: 'Badge added to obtainedBadges successfully' });
+    console.log('Added successfully');
+    return res.status(200).json({ message: 'Added successfully' });
 
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: 'Failed to add badge to obtainedBadges' });
+    return res.status(500).json({ error: 'Failed to add' });
   }
 }
   
@@ -106,6 +114,6 @@ module.exports = {
   getAllStudents,
   getStudentById,
   updateStudentById,
-  addBadgeIdToObtainedBadges,
+  addIdToObtainedList,
   deleteStudentById
 };

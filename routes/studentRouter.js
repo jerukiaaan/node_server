@@ -17,7 +17,7 @@ router.get('/:id', studentController.getStudentById);
 router.put('/:id', studentController.updateStudentById);
 
 // Add badgeId to obtainedBadges array
-router.patch('/:id', studentController.addBadgeIdToObtainedBadges);
+router.patch('/:id', studentController.addIdToObtainedList);
 
 // Delete a student by ID
 router.delete('/:id', studentController.deleteStudentById);
