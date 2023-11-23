@@ -76,15 +76,12 @@ const createTask = async (req, res) => {
             return res.status(404).json({ error: 'Act not found' });
         }
 
-        console.log(newTask.type);
         if (newTask.type == 'daily') {
             act.dailyTasks.push(newTask);
             await story.save().then((result) => {
 
-                const lastChapter = result.chapters[result.chapters.length - 1];
-                const lastAct = lastChapter.acts[lastChapter.acts.length - 1];
+                const lastAct = act;
                 const lastDailyTask = lastAct.dailyTasks[lastAct.dailyTasks.length - 1];
-
                 res.status(201).json(lastDailyTask);
 
             }).catch((error) => {
@@ -94,8 +91,7 @@ const createTask = async (req, res) => {
             act.weeklyTasks.push(newTask);
             await story.save().then((result) => {
 
-                const lastChapter = result.chapters[result.chapters.length - 1];
-                const lastAct = lastChapter.acts[lastChapter.acts.length - 1];
+                const lastAct = act;
                 const lastWeeklyTasks = lastAct.weeklyTasks[lastAct.weeklyTasks.length - 1];
 
                 res.status(201).json(lastWeeklyTasks);
