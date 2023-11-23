@@ -109,8 +109,7 @@ const createTask = async (req, res) => {
 //get story
 
 const getStory = async (req, res) => {
-    const storyID = req.params.storyID;
-    const story = await Story.findById(storyID);
+    const story = await Story.findOne();
     if (!story) {
         return res.status(404).json({ error: 'Story not found' });
     }

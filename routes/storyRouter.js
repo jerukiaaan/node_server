@@ -10,6 +10,6 @@ router.post('/:storyID/:chapterID', storyController.createAct);
 router.post('/:storyID/:chapterID/:actID', storyController.createTask);
 
 // Get
-router.get('/:storyID', storyController.getStory);
+router.get('/', storyController.getStory);
 
 module.exports = router;
