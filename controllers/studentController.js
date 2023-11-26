@@ -72,13 +72,13 @@ const addIdToObtainedList = async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    if (taskId) {
+    if (taskId && !student.obtainedTasks.includes(taskId)) {
       student.obtainedTasks.push(taskId);
-    } else if (badgeId) {
+    } else if (badgeId && !student.obtainedBadges.includes(badgeId)) {
       student.obtainedBadges.push(badgeId);
-    } else if (actId) {
+    } else if (actId && !student.obtainedActs.includes(actId)) {
       student.obtainedActs.push(actId);
-    } else {
+    } else if (chapterId && !student.obtainedChapters.includes(chapterId)) {
       student.obtainedChapters.push(chapterId);
     }
 
