@@ -102,7 +102,63 @@ const createTask = async (req, res) => {
         }
 };
 
-//get story
+//patch
+const patchById = async (req, res) => {
+    const { chapterId, actId, taskId, field, value } = req.body;
+
+    const story = await Story.findOne();
+
+    if (!story) {
+        return res.status(404).json({ error: 'Story not found' });
+    }
+
+    let document;
+
+    if(chapterId){
+        document = story.chapters.id(chapterId);
+        document[field] = value;
+
+        await story.save().then((result) => {
+            res.status(200).json(result);
+        }).catch((error) => {
+            res.status(500).json({ error: 'Failed to patch document' });
+        });
+    } else if (actId){
+        const chapter = story.chapters.find(chapter => chapter.acts.some(act => act._id.equals(actId)));
+        document = chapter.acts.id(actId);
+        document[field] = value;
+
+        await story.save().then((result) => {
+            res.status(200).json(document);
+        }).catch((error) => {
+            res.status(500).json({ error: 'Failed to patch document' });
+        });
+    } else if (taskId){
+        const chapter = story.chapters.find(chapter => chapter.acts.some(act => act.dailyTasks.some(task => task._id.equals(taskId))));
+
+        if (act.dailyTasks.some(task => task.id === taskId)){
+            const act = chapter.acts.find(act => act.dailyTasks.some(task => task._id.equals(taskId)));
+            document = act.dailyTasks.id(taskId);
+            document[field] = value;
+
+            await story.save().then((result) => {
+                res.status(200).json(result);
+            }).catch((error) => {
+                res.status(500).json({ error: 'Failed to patch document' });
+            });
+        } else if (act.weeklyTasks.some(task => task.id === taskId)){
+            const act = chapter.acts.find(act => act.weeklyTasks.some(task => task._id.equals(taskId)));
+            document = act.weeklyTasks.id(taskId);
+            document[field] = value;
+
+            await story.save().then((result) => {
+                res.status(200).json(result);
+            }).catch((error) => {
+                res.status(500).json({ error: 'Failed to patch document' });
+            });
+        }
+    }
+}
 
 const getStory = async (req, res) => {
     const story = await Story.findOne();
@@ -118,5 +174,6 @@ module.exports = {
     createChapter,
     createAct,
     createTask,
+    patchById,
     getStory
 };

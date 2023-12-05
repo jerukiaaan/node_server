@@ -9,6 +9,10 @@ router.post('/:storyID', storyController.createChapter);
 router.post('/:storyID/:chapterID', storyController.createAct);
 router.post('/:storyID/:chapterID/:actID', storyController.createTask);
 
+
+// Update
+router.patch('/patch', storyController.patchById);
+
 // Get
 router.get('/', storyController.getStory);
 

@@ -92,6 +92,53 @@ const addIdToObtainedList = async (req, res) => {
     return res.status(500).json({ error: 'Failed to add' });
   }
 }
+
+  //Add ID to friendRequestIds array
+const addToFriendRequest = async (req, res) => {
+    try {
+      const studentId = req.params.id;
+      const { targetId } = req.body;
+
+      const student = await Student.findById(targetId);
+      if (!student) {
+        return res.status(404).json({ error: 'Student not found' });
+      }
+
+      if (!student.friendRequestIds.includes(studentId)) {
+        student.friendRequestIds.push(studentId);
+      }
+      student.save();
+
+      return res.status(200).json({ message: 'Added successfully' });
+    }  catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Failed to add' });
+    }
+}
+
+const acceptFriendRequest = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const { targetId } = req.body;
+
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    if (!student.friendIds.includes(targetId)) {
+      student.friendIds.push(targetId);
+      //remove targetId from friendRequestIds
+      student.friendRequestIds = student.friendRequestIds.filter(id => id !== targetId);
+    }
+    student.save();
+
+    return res.status(200).json({ message: 'Accepted successfully' });
+  }  catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'Failed to Accept' });
+  }
+}
   
   // Delete a student by ID
 const deleteStudentById = (req, res) => {
@@ -115,5 +162,7 @@ module.exports = {
   getStudentById,
   updateStudentById,
   addIdToObtainedList,
-  deleteStudentById
+  deleteStudentById,
+  addToFriendRequest,
+  acceptFriendRequest
 };

@@ -19,6 +19,15 @@ router.put('/:id', studentController.updateStudentById);
 // Add badgeId to obtainedBadges array
 router.patch('/:id', studentController.addIdToObtainedList);
 
+// Update a student's field by ID
+router.patch('/friendRequest/:id', studentController.addToFriendRequest);
+
+// Update a student's field by ID
+router.patch('/accept/:id', studentController.acceptFriendRequest);
+
+// Update a student's field by ID
+// router.patch('/decline/:id', studentController.declineFriendRequest);
+
 // Delete a student by ID
 router.delete('/:id', studentController.deleteStudentById);
 
