@@ -15,7 +15,7 @@ app.use(cors());
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://127.0.0.1:27017/flutter', {
+  .connect('mongodb://ec2-13-211-98-5.ap-southeast-2.compute.amazonaws.com:27017/flutter', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
