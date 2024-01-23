@@ -25,6 +25,8 @@ router.patch('/friendRequest/:id', studentController.addToFriendRequest);
 // Update a student's field by ID
 router.patch('/accept/:id', studentController.acceptFriendRequest);
 
+router.patch('/screentime/:id', studentController.updateScreenTimes);
+
 // Update a student's field by ID
 // router.patch('/decline/:id', studentController.declineFriendRequest);
 

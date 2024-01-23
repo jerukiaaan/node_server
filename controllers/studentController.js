@@ -156,6 +156,37 @@ const deleteStudentById = (req, res) => {
       });
 }
 
+const updateScreenTimes = async (req, res) => {
+  const studentId = req.params.id;
+  const { 
+    screenTimeLeaderboard,
+    screenTimeProfile,
+    screenTimeRoadmap,
+    screenTimeAchievements,
+    screenTimeMastery
+   } = req.body;
+  try {
+    Student.findByIdAndUpdate(studentId, { 
+      'analyticsData.leaderboard': screenTimeLeaderboard,
+      'analyticsData.roadmap': screenTimeRoadmap,
+      'analyticsData.achievements': screenTimeAchievements,
+      'analyticsData.profile': screenTimeProfile,
+      'analyticsData.mastery': screenTimeMastery
+    }).then((student) => {
+      if (!student) {
+        res.status(404).json({ error: 'Student not found' });
+      } else {
+        console.log(
+          screenTimeLeaderboard
+          );
+        res.json({ message: 'Screen time updated successfully' });
+      }
+    })
+  } catch {
+
+  }
+}
+
 module.exports = {
   createStudent,
   getAllStudents,
@@ -164,5 +195,6 @@ module.exports = {
   addIdToObtainedList,
   deleteStudentById,
   addToFriendRequest,
-  acceptFriendRequest
+  acceptFriendRequest,
+  updateScreenTimes,
 };

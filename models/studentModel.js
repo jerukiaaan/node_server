@@ -1,5 +1,14 @@
 const mongoose = require('mongoose');
 
+
+const analyticsSchema = new mongoose.Schema({
+  roadmap: Number,
+  achievements: Number,
+  leaderboard: Number,
+  profile: Number,
+  mastery: Number,
+})
+
 const studentSchema = new mongoose.Schema({
     fullName: String,
     email: String,
@@ -10,7 +19,8 @@ const studentSchema = new mongoose.Schema({
     obtainedChapters: Array,
     friendIds: Array,
     friendRequestIds: Array,
-    likedByIds: Array
+    likedByIds: Array,
+    analyticsData: [analyticsSchema]
   });
   
   // Define a model based on the schema
