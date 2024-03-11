@@ -8,6 +8,7 @@ const studentRouter = require('./routes/studentRouter');
 const authRouter = require('./routes/authRouter');
 const storyRouter = require('./routes/storyRouter');
 const newsRouter = require('./routes/newsRouter');
+const uploadRouter = require('./routes/uploadRouter');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/students', studentRouter);
 app.use('/auth', authRouter);
 app.use('/stories', storyRouter);
 app.use('/news', newsRouter);
+app.use('/upload', uploadRouter);
 
 // Start the server
 app.listen(3000, () => {
