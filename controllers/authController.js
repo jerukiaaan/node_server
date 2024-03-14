@@ -6,10 +6,6 @@ const secretKey = "kiangwapo";
 
 const signIn = async (req, res) => {
   const { email, password } = req.body;
-
-  //log the value of req.body
-  console.log(req.body);
-
   try {
     const student = await Student.findOne({ email });
 
@@ -41,7 +37,25 @@ const register = async (req, res) => {
   res.json({ message: 'User registered successfully' });
 }
 
+const changePass = async (req, res) => {
+  const { email, password } = req.body;
+  try{
+  const hashedPassword = await bcrypt.hash(password, 10);
+    const student = await Student.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    return res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+
 module.exports = {
   signIn,
-  register
+  register,
+  changePass
 };
